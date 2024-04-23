@@ -1,29 +1,80 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
-  title: InhollandBankAPI
-  description: API for a banking application
-paths: {}
+  version: '1.0'
+  title: bank api
+  description: REST API created by IT2B group 2 for the bank application
+paths:
+  /login:
+     post:
+      security: []
+      tags:
+        - Authentication
+      summary: User Login. Returns an authentication token when correct information is provided
+      operationId: login
+      requestBody:
+        description: Object with username and password to compare to existing data in DB
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        200:
+          description: User login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JWT"
+        401:
+          description: Request not authorized - Access token is missing or invalid
+        400:
+          description: Operation could not be processed
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/eliastarin19/InhollandBankAPI/1.0.0
-security: 
-  - bearerAuth: []
+    url: https://virtserver.swaggerhub.com/577147_1/bank_rest_api/1.0
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  responses:
-    UnauthorizedError:
-      description: Access token is missing or invalid
   schemas:
-    Token:
-      description: Request body for login responses with JWT
+    User:
       type: object
       properties:
-        token:
+        id:
+          type: integer
+          example: 1
+        first_name:
           type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+          example: Jane
+        last_name:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: jane@email.com
+        role:
+          type: string
+          example: customer
+        BSN:
+          type: integer
+          example: 123456789
+        phone:
+          type: integer
+          example: 1234567890
+        
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          example: jane@email.com
+        password:
+            type: string
+            format: password
+            example: secret123
+    JWT:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+tags:
+  - name: Authentication
